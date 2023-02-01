@@ -1,0 +1,38 @@
+- name: Install Localstack Dependencies
+  yum:
+    name:
+    - wget
+    - python3
+    - python3-pip
+    state: present
+
+- name: Install Localstack
+  pip:
+    name: localstack
+    executable: pip3
+  become_user: vagrant
+
+# https://stackoverflow.com/a/54504083
+- name: Grant vagrant user access to docker socket in the current shell
+  command: setfacl --modify user:vagrant:rw /var/run/docker.sock
+  become: true
+  become_method: sudo
+
+# If we start localstack directly from same shell it won't work, hence the above step to avoid logging out and logging back in
+- name: Start Localstack
+  shell: /home/vagrant/.local/bin/localstack start -d
+  become: true
+  become_method: sudo
+  become_user: vagrant
+
+- name: Always start Localstack on reboots
+  lineinfile:
+    path: ~/.bashrc
+    line: sudo /home/vagrant/.local/bin/localstack start -d
+
+- name: Change localstack directory ownership to vagrant 
+  file:
+    path: /home/vagrant/.cache/localstack
+    owner: vagrant
+    group: vagrant
+  

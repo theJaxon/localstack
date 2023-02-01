@@ -1,0 +1,43 @@
+- name: Add Hashicorp Repository
+  copy:
+    content: |
+      [hashicorp]
+      name=Hashicorp Stable - $basearch
+      baseurl=https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://rpm.releases.hashicorp.com/gpg
+    dest: /etc/yum.repos.d/hashicorp.repo
+
+- name: Install Terraform
+  yum:
+    name: terraform
+    state: present
+
+- name: Install tflocal
+  pip:
+    name: terraform-local
+    executable: pip3
+
+- name: Create dir for storing cache configs
+  file:
+    path: "/home/vagrant/.terraform.d/plugin-cache"
+    state: directory
+    owner: vagrant
+    group: vagrant
+
+- name: Create .terraformrc config file
+  copy:
+    content: | 
+      plugin_cache_dir   = "/home/vagrant/.terraform.d/plugin-cache"
+      disable_checkpoint = true
+    dest: "/home/vagrant/.terraformrc"
+    owner: vagrant
+    group: vagrant
+
+- name: Add terraform alias and enable auto completion
+  blockinfile:
+    block: | 
+      alias terraform=tflocal
+      complete -C /usr/bin/terraform terraform
+    path: "/home/vagrant/.bashrc"

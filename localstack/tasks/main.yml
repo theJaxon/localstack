@@ -1,0 +1,15 @@
+---
+- name: Install Docker
+  include_tasks: docker.yml
+
+- name: Install LocalStack
+  include_tasks: localstack.yml
+
+- name: Install Terraform
+  include_tasks: terraform.yml
+
+- name: Install awslocal
+  include_tasks: awslocal.yml
+
+- name: Install NodeJS and DynamoDB Admin
+  include_tasks: nodejs.yml

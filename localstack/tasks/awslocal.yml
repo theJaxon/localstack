@@ -1,0 +1,12 @@
+- name: Install awslocal
+  pip:
+    name: awscli-local[ver1]
+    executable: pip3
+
+- name: Alias awslocal and enable auto completion
+  blockinfile: 
+    block: | 
+      alias aws="AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=${DEFAULT_REGION:-$AWS_DEFAULT_REGION} aws --endpoint-url=http://${LOCALSTACK_HOST:-localhost}:4566"
+      complete -C '/usr/local/bin/aws_completer' aws
+      complete -C '/usr/local/bin/aws_completer' awslocal
+    path: "/home/vagrant/.bashrc"

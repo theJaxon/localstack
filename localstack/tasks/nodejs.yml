@@ -1,0 +1,19 @@
+- name: Add DYNAMO ENDPOINT ENV to map to localstack port
+  lineinfile:
+    line: "export DYNAMO_ENDPOINT=http://localhost:4566"
+    dest: /home/vagrant/.bashrc
+
+- name: Install nodejs and npm
+  yum:
+    name:
+      - nodejs
+      - npm
+    state: present
+
+# https://www.npmjs.com/package/dynamodb-admin
+- name: Install DynamoDB Admin
+  npm:
+    name: dynamodb-admin
+    global: true
+    state: present
+

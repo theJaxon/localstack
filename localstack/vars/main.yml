@@ -1,0 +1,3 @@
+---
+# vars file for localstack
+nodejs_version: 19.4.0
